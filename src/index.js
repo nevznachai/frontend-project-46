@@ -1,20 +1,32 @@
 import fs from 'fs';
 import path from 'path';
+import yaml from 'js-yaml';
 
-const getData = (filepath) => {
-  const fullPath = path.resolve(process.cwd(), filepath);
-  const content = fs.readFileSync(fullPath, 'utf-8');
-  return JSON.parse(content);
-};
-
-const formatValue = (value) => {
+  const formatValue = (value) => {
   if (typeof value === 'boolean' || value === null) {
     return String(value);
   }
   return value;
 };
 
-const genDiff = (filepath1, filepath2) => {
+  const getData = (filepath) => {
+  const fullPath = path.resolve(process.cwd(), filepath);
+  const content = fs.readFileSync(fullPath, 'utf-8');
+  const ext = path.extname(filepath);
+
+
+  if (ext === '.json') {
+    return JSON.parse(content);
+  }
+
+  if (ext === '.yml' || ext === '.yaml') {
+    return yaml.load(content);
+  }
+
+  throw new Error(`Unsupported file format: ${ext}`);
+};
+
+  const genDiff = (filepath1, filepath2) => {
   const data1 = getData(filepath1);
   const data2 = getData(filepath2);
 
