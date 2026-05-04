@@ -1,3 +1,4 @@
+import getFormatter from './formatters/index.js';
 const buildDiff = (obj1, obj2) => {
   const keys = Array.from(new Set([...Object.keys(obj1), ...Object.keys(obj2)])).sort();
 
@@ -51,9 +52,10 @@ const formatStylish = (tree, depth = 0) => {
   }).join('\n')}\n${indent(depth)}}`;
 };
 
-const genDiff = (obj1, obj2, format = 'stylish') => {
+const genDiff = (obj1, obj2, formatName = 'stylish') => {
   const tree = buildDiff(obj1, obj2);
-  return formatStylish(tree);
+  const formatter = getFormatter(formatName);
+  return formatter(tree);
 };
 
 export default genDiff;

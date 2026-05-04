@@ -6,3 +6,5 @@
 [![Actions Status](https://github.com/nevznachai/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/nevznachai/frontend-project-46/actions)
 [![asciicast](https://asciinema.org/a/snnO3hOTY79isf31.svg)](https://asciinema.org/a/snnO3hOTY79isf31)
 [![asciicast](https://asciinema.org/a/6AH3GHIU6mNPvME7.svg)](https://asciinema.org/a/6AH3GHIU6mNPvME7)
+[![asciicast](https://asciinema.org/a/mITGAa98TeEDIym8.svg)](https://asciinema.org/a/mITGAa98TeEDIym8)
+
