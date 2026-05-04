@@ -1,18 +1,14 @@
 import fs from 'fs';
 import path from 'path';
+import parse from '../src/parse.js';
 import genDiff from '../src/index.js';
 
-const getFixturePath = (filename) =>
-  path.join(__dirname, '..', '_fixtures_', filename);
+test('gendiff stylish JSON', () => {
+  const file1 = parse(path.resolve(__dirname, 'fixtures/file1.json'));
+  const file2 = parse(path.resolve(__dirname, 'fixtures/file2.json'));
 
-const readFile = (filename) =>
-  fs.readFileSync(getFixturePath(filename), 'utf-8');
+  const diff = genDiff(file1, file2, 'stylish');
 
-test('flat json diff', () => {
-  const file1 = getFixturePath('file1.json');
-  const file2 = getFixturePath('file2.json');
-
-  const expected = readFile('expected.txt');
-
-  expect(genDiff(file1, file2)).toBe(expected);
+  const expected = fs.readFileSync(path.resolve(__dirname, 'fixtures/stylish_expected.txt'), 'utf-8');
+  expect(diff).toBe(expected.trim());
 });

@@ -5,3 +5,4 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=nevznachai_frontend-project-46&metric=bugs)](https://sonarcloud.io/summary/new_code?id=nevznachai_frontend-project-46)
 [![Actions Status](https://github.com/nevznachai/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/nevznachai/frontend-project-46/actions)
 [![asciicast](https://asciinema.org/a/snnO3hOTY79isf31.svg)](https://asciinema.org/a/snnO3hOTY79isf31)
+[![asciicast](https://asciinema.org/a/6AH3GHIU6mNPvME7.svg)](https://asciinema.org/a/6AH3GHIU6mNPvME7)
