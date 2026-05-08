@@ -8,13 +8,17 @@ const parse = (filepath) => {
 
   const extname = path.extname(filepath);
 
-  if (extname === '.json') {
-    return JSON.parse(data);
-  } else if (extname === '.yml' || extname === '.yaml') {
-    return yaml.load(data);
-  }
+  switch (extname) {
+    case '.json':
+      return JSON.parse(data);
 
-  throw new Error(`Unsupported file format: ${extname}`);
+    case '.yml':
+    case '.yaml':
+      return yaml.load(data);
+
+    default:
+      throw new Error(`Unsupported file format: ${extname}`);
+  }
 };
 
 export default parse;
