@@ -14,7 +14,7 @@ program
   .action((filepath1, filepath2, options) => {
     const output = genDiff(filepath1, filepath2, options.format);
 
-    console.log(output);
+   process.stdout.write(output);
   });
 
 program.parse();
