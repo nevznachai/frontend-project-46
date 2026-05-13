@@ -1,34 +1,57 @@
-const indent = (depth) => '  '.repeat(depth * 2);
+const makeIndent = (depth) => '    '.repeat(depth);
+const makeBracketIndent = (depth) => '    '.repeat(depth - 1);
+const makeSignIndent = (depth) => `${makeBracketIndent(depth)}  `;
 
 const stringify = (value, depth) => {
   if (value !== null && typeof value === 'object') {
-    const entries = Object.entries(value)
-      .map(([k, v]) => `${indent(depth + 1)}${k}: ${stringify(v, depth + 1)}`);
-    return `{\n${entries.join('\n')}\n${indent(depth)}}`;
+    const lines = Object.entries(value)
+      .map(([key, val]) => (
+        `${makeIndent(depth)}${key}: ${stringify(val, depth + 1)}`
+      ));
+
+    return [
+      '{',
+      ...lines,
+      `${makeBracketIndent(depth)}}`,
+    ].join('\n');
   }
+
   return String(value);
 };
 
-const stylish = (tree, depth = 0) => {
+const stylish = (tree, depth = 1) => {
   const lines = tree.map((node) => {
     const { key, type } = node;
+
     switch (type) {
       case 'nested':
-        return `${indent(depth)}  ${key}: ${stylish(node.children, depth + 1)}`;
+        return `${makeIndent(depth)}${key}: ${stylish(node.children, depth + 1)}`;
+
       case 'added':
-        return `${indent(depth)}+ ${key}: ${stringify(node.value, depth)}`;
+        return `${makeSignIndent(depth)}+ ${key}: ${stringify(node.value, depth + 1)}`;
+
       case 'removed':
-        return `${indent(depth)}- ${key}: ${stringify(node.value, depth)}`;
+        return `${makeSignIndent(depth)}- ${key}: ${stringify(node.value, depth + 1)}`;
+
       case 'changed':
-        return `${indent(depth)}- ${key}: ${stringify(node.oldValue, depth)}\n${indent(depth)}+ ${key}: ${stringify(node.newValue, depth)}`;
+        return [
+          `${makeSignIndent(depth)}- ${key}: ${stringify(node.oldValue, depth + 1)}`,
+          `${makeSignIndent(depth)}+ ${key}: ${stringify(node.newValue, depth + 1)}`,
+        ].join('\n');
+
       case 'unchanged':
-        return `${indent(depth)}  ${key}: ${stringify(node.value, depth)}`;
+        return `${makeSignIndent(depth)}  ${key}: ${stringify(node.value, depth + 1)}`;
+
       default:
         throw new Error(`Unknown type: ${type}`);
     }
   });
 
-  return `{\n${lines.join('\n')}\n${indent(depth)}}`;
+  return [
+    '{',
+    ...lines,
+    `${makeBracketIndent(depth)}}`,
+  ].join('\n');
 };
 
 export default stylish;
