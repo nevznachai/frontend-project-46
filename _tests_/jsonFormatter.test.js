@@ -1,4 +1,4 @@
-import jsonFormatter from '../formatters/json.js';
+import jsonFormatter from '../src/formatters/json.js';
 
 const diffTree = [
   { key: 'follow', type: 'removed', value: true },

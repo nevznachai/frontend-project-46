@@ -25,7 +25,7 @@ const stylish = (tree, depth = 1) => {
 
     switch (type) {
       case 'nested':
-        return `${makeSignIndent(depth)}  ${key}: ${stylish(node.children, depth + 1)}`;
+  return `${makeSignIndent(depth)}  ${key}: ${stylish(node.children, depth + 1)}`;
 
       case 'added':
         return `${makeSignIndent(depth)}+ ${key}: ${stringify(node.value, depth + 1)}`;
