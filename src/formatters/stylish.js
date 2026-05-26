@@ -1,64 +1,54 @@
-const spacesCount = 4;
+const indentSize = 4;
 
-const getIndent = (depth) => ' '.repeat(depth * spacesCount);
-
-const getSignIndent = (depth, sign) =>
-  ' '.repeat(depth * spacesCount - 2) + `${sign} `;
+const getIndent = (depth) => ' '.repeat(depth * indentSize);
+const getSignIndent = (depth) => ' '.repeat(depth * indentSize - 2);
 
 const stringify = (value, depth) => {
-  if (value !== null && typeof value === 'object') {
-    const indent = ' '.repeat(depth * spacesCount);
-    const bracketIndent = ' '.repeat((depth - 1) * spacesCount);
-
-    const lines = Object.entries(value).map(
-      ([key, val]) =>
-        `${indent}    ${key}: ${stringify(val, depth + 1)}`
-    );
-
-    return [
-      '{',
-      ...lines,
-      `${bracketIndent}}`,
-    ].join('\n');
+  if (value === null || typeof value !== 'object') {
+    return String(value);
   }
 
-  return String(value);
+  const indent = getIndent(depth);
+  const bracketIndent = getIndent(depth - 1);
+
+  const lines = Object.entries(value).map(
+    ([key, val]) => `${indent}${key}: ${stringify(val, depth + 1)}`
+  );
+
+  return ['{', ...lines, `${bracketIndent}}`].join('\n');
 };
 
+const formatStylish = (tree, depth = 1) => {
+  const indent = getSignIndent(depth);
 
+  const lines = tree.flatMap((item) => {
+    switch (item.type) {
+      case 'nested':
+        return `${indent}  ${item.key}: ${formatStylish(item.children, depth + 1)}`;
 
-const stylish = (tree, depth = 1) => {
-  const lines = tree.flatMap((node) => {
-    switch (node.type) {
       case 'added':
-        return `${getSignIndent(depth, '+')}${node.key}: ${stringify(node.value, depth)}`;
+        return `${indent}+ ${item.key}: ${stringify(item.value, depth + 1)}`;
 
       case 'removed':
-        return `${getSignIndent(depth, '-')}${node.key}: ${stringify(node.value, depth)}`;
+        return `${indent}- ${item.key}: ${stringify(item.value, depth + 1)}`;
 
       case 'unchanged':
-        return `${getIndent(depth)}${node.key}: ${stringify(node.value, depth)}`;
+        return `${indent}  ${item.key}: ${stringify(item.value, depth + 1)}`;
 
       case 'changed':
         return [
-          `${getSignIndent(depth, '-')}${node.key}: ${stringify(node.oldValue, depth)}`,
-          `${getSignIndent(depth, '+')}${node.key}: ${stringify(node.newValue, depth)}`,
+          `${indent}- ${item.key}: ${stringify(item.oldValue, depth + 1)}`,
+          `${indent}+ ${item.key}: ${stringify(item.newValue, depth + 1)}`,
         ];
 
-      case 'nested':
-         return `${getIndent(depth)}${node.key}: ${stylish(node.children, depth + 1)}`;
-
-
-     default:
-        throw new Error(`Unknown type: ${node.type}`);
+      default:
+        throw new Error(`Unknown type: ${item.type}`);
     }
   });
 
-  return [
-    '{',
-    ...lines,
-    `${getIndent(depth - 1)}}`,
-  ].join('\n');
+  const bracketIndent = getIndent(depth - 1);
+
+  return ['{', ...lines, `${bracketIndent}}`].join('\n');
 };
 
-export default stylish;
+export default formatStylish;
